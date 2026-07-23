@@ -23,4 +23,6 @@ public class User {
     private String email;
 
     private String password;
+
+    private Double balance = 0.0;
 }
