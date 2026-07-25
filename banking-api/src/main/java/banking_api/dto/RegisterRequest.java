@@ -1,15 +1,15 @@
 package banking_api.dto;
 
-import lombok.*;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class RegisterRequest {
 
     private String firstName;
+
     private String lastName;
+
     private String email;
+
     private String password;
 }
