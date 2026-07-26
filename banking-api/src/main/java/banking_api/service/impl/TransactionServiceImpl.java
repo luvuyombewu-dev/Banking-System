@@ -2,7 +2,6 @@ package banking_api.service.impl;
 
 
 import banking_api.dto.TransactionResponse;
-
 import banking_api.exception.BadRequestException;
 import banking_api.exception.ResourceNotFoundException;
 
@@ -17,10 +16,8 @@ import banking_api.service.TransactionService;
 
 import org.springframework.stereotype.Service;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 
 @Service
@@ -32,11 +29,10 @@ public class TransactionServiceImpl implements TransactionService {
     private final AccountRepository accountRepository;
 
 
-
     public TransactionServiceImpl(
             TransactionRepository transactionRepository,
             AccountRepository accountRepository
-    ){
+    ) {
 
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
@@ -44,14 +40,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
-
-
-
-
     @Override
-    public List<TransactionResponse> getTransactions(
-            User user
-    ){
+    public List<TransactionResponse> getTransactions(User user) {
 
 
         Account account =
@@ -63,19 +53,16 @@ public class TransactionServiceImpl implements TransactionService {
                         );
 
 
-
         return transactionRepository
                 .findByAccount(account)
                 .stream()
                 .map(transaction ->
-
                         new TransactionResponse(
                                 transaction.getId(),
                                 transaction.getType(),
                                 transaction.getAmount(),
                                 transaction.getDate()
                         )
-
                 )
                 .toList();
 
@@ -83,16 +70,11 @@ public class TransactionServiceImpl implements TransactionService {
 
 
 
-
-
-
-
-
     @Override
     public TransactionResponse deposit(
             User user,
             Double amount
-    ){
+    ) {
 
 
         Account account =
@@ -104,8 +86,7 @@ public class TransactionServiceImpl implements TransactionService {
                         );
 
 
-
-        if(amount <= 0){
+        if (amount == null || amount <= 0) {
 
             throw new BadRequestException(
                     "Amount must be greater than zero"
@@ -114,40 +95,32 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
 
+        if (account.getBalance() == null) {
+
+            account.setBalance(0.0);
+
+        }
+
 
         account.setBalance(
                 account.getBalance() + amount
         );
 
 
-
         accountRepository.save(account);
 
 
 
-        Transaction transaction =
-                new Transaction();
+        Transaction transaction = new Transaction();
 
 
+        transaction.setAccount(account);
 
-        transaction.setAccount(
-                account
-        );
+        transaction.setType("DEPOSIT");
 
+        transaction.setAmount(amount);
 
-        transaction.setType(
-                "DEPOSIT"
-        );
-
-
-        transaction.setAmount(
-                amount
-        );
-
-
-        transaction.setDate(
-                LocalDateTime.now()
-        );
+        transaction.setDate(LocalDateTime.now());
 
 
 
@@ -158,7 +131,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         Transaction saved =
                 transactionRepository.save(transaction);
-
 
 
 
@@ -174,15 +146,11 @@ public class TransactionServiceImpl implements TransactionService {
 
 
 
-
-
-
-
     @Override
     public TransactionResponse withdraw(
             User user,
             Double amount
-    ){
+    ) {
 
 
         Account account =
@@ -194,8 +162,7 @@ public class TransactionServiceImpl implements TransactionService {
                         );
 
 
-
-        if(amount <= 0){
+        if (amount == null || amount <= 0) {
 
             throw new BadRequestException(
                     "Amount must be greater than zero"
@@ -204,8 +171,8 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
 
-
-        if(account.getBalance() < amount){
+        if (account.getBalance() == null ||
+                account.getBalance() < amount) {
 
             throw new BadRequestException(
                     "Insufficient balance"
@@ -220,34 +187,20 @@ public class TransactionServiceImpl implements TransactionService {
         );
 
 
-
         accountRepository.save(account);
 
 
 
-        Transaction transaction =
-                new Transaction();
+        Transaction transaction = new Transaction();
 
 
+        transaction.setAccount(account);
 
-        transaction.setAccount(
-                account
-        );
+        transaction.setType("WITHDRAWAL");
 
+        transaction.setAmount(amount);
 
-        transaction.setType(
-                "WITHDRAWAL"
-        );
-
-
-        transaction.setAmount(
-                amount
-        );
-
-
-        transaction.setDate(
-                LocalDateTime.now()
-        );
+        transaction.setDate(LocalDateTime.now());
 
 
 
@@ -269,6 +222,5 @@ public class TransactionServiceImpl implements TransactionService {
         );
 
     }
-
 
 }

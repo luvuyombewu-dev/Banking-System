@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
 
         ErrorResponse error =
                 new ErrorResponse(
-                        ex.getMessage(),
+                        "Internal server error",
                         500,
                         LocalDateTime.now()
                 );
