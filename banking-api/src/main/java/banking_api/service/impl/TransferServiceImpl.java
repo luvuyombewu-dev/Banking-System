@@ -2,6 +2,10 @@ package banking_api.service.impl;
 
 
 import banking_api.dto.TransactionResponse;
+
+import banking_api.exception.BadRequestException;
+import banking_api.exception.ResourceNotFoundException;
+
 import banking_api.model.Account;
 import banking_api.model.Transaction;
 import banking_api.model.User;
@@ -22,21 +26,26 @@ import java.time.LocalDateTime;
 public class TransferServiceImpl implements TransferService {
 
 
+
     private final AccountRepository accountRepository;
 
     private final TransactionRepository transactionRepository;
 
 
 
+
     public TransferServiceImpl(
             AccountRepository accountRepository,
             TransactionRepository transactionRepository
-    ) {
+    ){
 
         this.accountRepository = accountRepository;
-
         this.transactionRepository = transactionRepository;
+
     }
+
+
+
 
 
 
@@ -46,16 +55,18 @@ public class TransferServiceImpl implements TransferService {
             User sender,
             String receiverAccountNumber,
             Double amount
-    ) {
+    ){
+
 
 
         Account senderAccount =
                 accountRepository.findByUser(sender)
                         .orElseThrow(
-                                () -> new RuntimeException(
+                                () -> new ResourceNotFoundException(
                                         "Sender account not found"
                                 )
                         );
+
 
 
 
@@ -64,19 +75,34 @@ public class TransferServiceImpl implements TransferService {
                                 receiverAccountNumber
                         )
                         .orElseThrow(
-                                () -> new RuntimeException(
+                                () -> new ResourceNotFoundException(
                                         "Receiver account not found"
                                 )
                         );
 
 
 
+
+
+        if(amount <= 0){
+
+            throw new BadRequestException(
+                    "Amount must be greater than zero"
+            );
+
+        }
+
+
+
+
         if(senderAccount.getBalance() < amount){
 
-            throw new RuntimeException(
+            throw new BadRequestException(
                     "Insufficient balance"
             );
+
         }
+
 
 
 
@@ -84,15 +110,15 @@ public class TransferServiceImpl implements TransferService {
                 .equals(receiverAccount.getId())){
 
 
-            throw new RuntimeException(
+            throw new BadRequestException(
                     "Cannot transfer to same account"
             );
+
         }
 
 
 
 
-        // Remove money from sender
 
         senderAccount.setBalance(
                 senderAccount.getBalance() - amount
@@ -100,43 +126,46 @@ public class TransferServiceImpl implements TransferService {
 
 
 
-        // Add money to receiver
-
         receiverAccount.setBalance(
                 receiverAccount.getBalance() + amount
         );
 
 
 
-        accountRepository.save(senderAccount);
-
-        accountRepository.save(receiverAccount);
 
 
 
-
-
-        // Sender transaction
 
         Transaction senderTransaction =
                 new Transaction();
+
 
 
         senderTransaction.setAccount(
                 senderAccount
         );
 
+
         senderTransaction.setType(
                 "TRANSFER_OUT"
         );
+
 
         senderTransaction.setAmount(
                 amount
         );
 
+
         senderTransaction.setDate(
                 LocalDateTime.now()
         );
+
+
+
+        senderAccount.getTransactions()
+                .add(senderTransaction);
+
+
 
 
         transactionRepository.save(
@@ -147,10 +176,12 @@ public class TransferServiceImpl implements TransferService {
 
 
 
-        // Receiver transaction
+
+
 
         Transaction receiverTransaction =
                 new Transaction();
+
 
 
         receiverTransaction.setAccount(
@@ -173,9 +204,26 @@ public class TransferServiceImpl implements TransferService {
         );
 
 
+
+        receiverAccount.getTransactions()
+                .add(receiverTransaction);
+
+
+
+
         transactionRepository.save(
                 receiverTransaction
         );
+
+
+
+
+
+        accountRepository.save(senderAccount);
+
+        accountRepository.save(receiverAccount);
+
+
 
 
 
@@ -187,5 +235,8 @@ public class TransferServiceImpl implements TransferService {
                 senderTransaction.getAmount(),
                 senderTransaction.getDate()
         );
+
     }
+
+
 }

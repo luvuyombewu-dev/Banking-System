@@ -1,11 +1,11 @@
 package banking_api.service;
 
-import banking_api.dto.AccountResponse;
-import banking_api.model.User;
+import banking_api.model.Account;
 
 public interface AccountService {
 
-    AccountResponse createAccount(User user);
+    Account createAccount(String email);
 
-    AccountResponse getMyAccount(User user);
+    Account getAccountByEmail(String email);
+
 }
