@@ -1,9 +1,12 @@
 package banking_api.security;
 
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -14,22 +17,27 @@ import java.util.Date;
 public class JwtService {
 
 
-    private final String secretKey =
-            "c2VjdXJlYmFua2luZ3N5c3RlbXNlY3JldGtleTEyMzQ1Njc4OTA=";
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
+
 
 
     public String generateToken(String email) {
-
 
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(new Date())
                 .expiration(
-                        new Date(System.currentTimeMillis() + 3600000)
+                        new Date(System.currentTimeMillis() + jwtExpiration)
                 )
                 .signWith(getSignKey())
                 .compact();
     }
+
 
 
     public String extractEmail(String token) {
@@ -43,12 +51,18 @@ public class JwtService {
     }
 
 
-    public boolean isTokenValid(String token) {
+
+    public boolean isTokenValid(
+            String token,
+            UserDetails userDetails
+    ) {
 
         try {
 
-            extractEmail(token);
-            return true;
+            String email = extractEmail(token);
+
+            return email.equals(userDetails.getUsername())
+                    && !isTokenExpired(token);
 
         } catch (Exception e) {
 
@@ -57,10 +71,29 @@ public class JwtService {
     }
 
 
+
+    private boolean isTokenExpired(String token) {
+
+        Date expiration =
+                Jwts.parser()
+                        .verifyWith(getSignKey())
+                        .build()
+                        .parseSignedClaims(token)
+                        .getPayload()
+                        .getExpiration();
+
+        return expiration.before(new Date());
+    }
+
+
+
     private SecretKey getSignKey() {
 
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes =
+                Decoders.BASE64.decode(secretKey);
+
 
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
 }

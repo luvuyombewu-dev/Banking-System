@@ -3,7 +3,7 @@ package banking_api.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,18 +21,15 @@ public class GlobalExceptionHandler {
             ResourceNotFoundException ex
     ) {
 
-
-        ErrorResponse error =
-                new ErrorResponse(
-                        ex.getMessage(),
-                        404,
-                        LocalDateTime.now()
-                );
-
-
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(error);
+                .body(
+                        new ErrorResponse(
+                                ex.getMessage(),
+                                404,
+                                LocalDateTime.now()
+                        )
+                );
     }
 
 
@@ -44,18 +41,15 @@ public class GlobalExceptionHandler {
             BadRequestException ex
     ) {
 
-
-        ErrorResponse error =
-                new ErrorResponse(
-                        ex.getMessage(),
-                        400,
-                        LocalDateTime.now()
-                );
-
-
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(error);
+                .body(
+                        new ErrorResponse(
+                                ex.getMessage(),
+                                400,
+                                LocalDateTime.now()
+                        )
+                );
     }
 
 
@@ -71,22 +65,47 @@ public class GlobalExceptionHandler {
         String message =
                 ex.getBindingResult()
                         .getFieldErrors()
-                        .get(0)
-                        .getDefaultMessage();
-
-
-
-        ErrorResponse error =
-                new ErrorResponse(
-                        message,
-                        400,
-                        LocalDateTime.now()
-                );
+                        .stream()
+                        .findFirst()
+                        .map(error ->
+                                error.getDefaultMessage()
+                        )
+                        .orElse(
+                                "Invalid request"
+                        );
 
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(error);
+                .body(
+                        new ErrorResponse(
+                                message,
+                                400,
+                                LocalDateTime.now()
+                        )
+                );
+
+    }
+
+
+
+
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleAuthentication(
+            BadCredentialsException ex
+    ) {
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        new ErrorResponse(
+                                "Invalid credentials",
+                                401,
+                                LocalDateTime.now()
+                        )
+                );
+
     }
 
 
@@ -99,17 +118,16 @@ public class GlobalExceptionHandler {
     ) {
 
 
-        ErrorResponse error =
-                new ErrorResponse(
-                        "Internal server error",
-                        500,
-                        LocalDateTime.now()
-                );
-
-
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(error);
+                .body(
+                        new ErrorResponse(
+                                "An unexpected error occurred",
+                                500,
+                                LocalDateTime.now()
+                        )
+                );
+
     }
 
 }

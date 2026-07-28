@@ -4,20 +4,23 @@ package banking_api.service.impl;
 import banking_api.dto.TransactionResponse;
 import banking_api.exception.BadRequestException;
 import banking_api.exception.ResourceNotFoundException;
-
 import banking_api.model.Account;
 import banking_api.model.Transaction;
+import banking_api.model.TransactionType;
 import banking_api.model.User;
-
 import banking_api.repository.AccountRepository;
 import banking_api.repository.TransactionRepository;
-
 import banking_api.service.TransactionService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Service
@@ -27,6 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
 
     private final AccountRepository accountRepository;
+
 
 
     public TransactionServiceImpl(
@@ -40,108 +44,136 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
+
     @Override
-    public List<TransactionResponse> getTransactions(User user) {
+    public Page<TransactionResponse> getTransactions(
+            User user,
+            TransactionType type,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            int page,
+            int size
+    ) {
 
 
         Account account =
                 accountRepository.findByUser(user)
-                        .orElseThrow(
-                                () -> new ResourceNotFoundException(
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
                                         "Account not found"
                                 )
                         );
 
 
-        return transactionRepository
-                .findByAccount(account)
-                .stream()
-                .map(transaction ->
-                        new TransactionResponse(
-                                transaction.getId(),
-                                transaction.getType(),
-                                transaction.getAmount(),
-                                transaction.getDate()
-                        )
-                )
-                .toList();
+        Pageable pageable =
+                PageRequest.of(page, size);
+
+
+
+        Page<Transaction> transactions;
+
+
+        if(type != null && startDate != null && endDate != null) {
+
+
+            transactions =
+                    transactionRepository
+                            .findByAccountAndTypeAndDateBetween(
+                                    account,
+                                    type,
+                                    startDate,
+                                    endDate,
+                                    pageable
+                            );
+
+
+        } else if(type != null) {
+
+
+            transactions =
+                    transactionRepository
+                            .findByAccountAndType(
+                                    account,
+                                    type,
+                                    pageable
+                            );
+
+
+        } else if(startDate != null && endDate != null) {
+
+
+            transactions =
+                    transactionRepository
+                            .findByAccountAndDateBetween(
+                                    account,
+                                    startDate,
+                                    endDate,
+                                    pageable
+                            );
+
+
+        } else {
+
+
+            transactions =
+                    transactionRepository.findByAccount(
+                            account,
+                            pageable
+                    );
+
+        }
+
+
+        return transactions.map(
+                this::mapToResponse
+        );
 
     }
+
 
 
 
     @Override
     public TransactionResponse deposit(
             User user,
-            Double amount
+            BigDecimal amount
     ) {
 
 
         Account account =
-                accountRepository.findByUser(user)
-                        .orElseThrow(
-                                () -> new ResourceNotFoundException(
-                                        "Account not found"
-                                )
-                        );
+                getAccount(user);
 
 
-        if (amount == null || amount <= 0) {
-
-            throw new BadRequestException(
-                    "Amount must be greater than zero"
-            );
-
-        }
+        validateAmount(amount);
 
 
-        if (account.getBalance() == null) {
+        if(account.getBalance() == null) {
 
-            account.setBalance(0.0);
+            account.setBalance(BigDecimal.ZERO);
 
         }
 
 
         account.setBalance(
-                account.getBalance() + amount
+                account.getBalance()
+                        .add(amount)
         );
 
 
-        accountRepository.save(account);
+        Transaction transaction =
+                createTransaction(
+                        account,
+                        TransactionType.DEPOSIT,
+                        amount
+                );
 
 
-
-        Transaction transaction = new Transaction();
-
-
-        transaction.setAccount(account);
-
-        transaction.setType("DEPOSIT");
-
-        transaction.setAmount(amount);
-
-        transaction.setDate(LocalDateTime.now());
-
-
-
-        account.getTransactions()
-                .add(transaction);
-
-
-
-        Transaction saved =
-                transactionRepository.save(transaction);
-
-
-
-        return new TransactionResponse(
-                saved.getId(),
-                saved.getType(),
-                saved.getAmount(),
-                saved.getDate()
+        return mapToResponse(
+                transaction
         );
 
     }
+
 
 
 
@@ -149,30 +181,93 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionResponse withdraw(
             User user,
-            Double amount
+            BigDecimal amount
     ) {
 
 
         Account account =
-                accountRepository.findByUser(user)
-                        .orElseThrow(
-                                () -> new ResourceNotFoundException(
-                                        "Account not found"
-                                )
-                        );
+                getAccount(user);
 
 
-        if (amount == null || amount <= 0) {
+        validateAmount(amount);
+
+
+        if(account.getBalance()
+                .compareTo(amount) < 0) {
 
             throw new BadRequestException(
-                    "Amount must be greater than zero"
+                    "Insufficient balance"
             );
 
         }
 
 
-        if (account.getBalance() == null ||
-                account.getBalance() < amount) {
+        account.setBalance(
+                account.getBalance()
+                        .subtract(amount)
+        );
+
+
+        Transaction transaction =
+                createTransaction(
+                        account,
+                        TransactionType.WITHDRAW,
+                        amount
+                );
+
+
+        return mapToResponse(
+                transaction
+        );
+
+    }
+
+
+
+
+
+    @Override
+    @Transactional
+    public TransactionResponse transfer(
+            User sender,
+            String receiverAccountNumber,
+            BigDecimal amount
+    ) {
+
+
+        validateAmount(amount);
+
+
+        Account senderAccount =
+                getAccount(sender);
+
+
+
+        Account receiverAccount =
+                accountRepository.findByAccountNumber(
+                                receiverAccountNumber
+                        )
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Receiver account not found"
+                                )
+                        );
+
+
+
+        if(senderAccount.getId()
+                .equals(receiverAccount.getId())) {
+
+            throw new BadRequestException(
+                    "Cannot transfer to the same account"
+            );
+
+        }
+
+
+
+        if(senderAccount.getBalance()
+                .compareTo(amount) < 0) {
 
             throw new BadRequestException(
                     "Insufficient balance"
@@ -182,43 +277,128 @@ public class TransactionServiceImpl implements TransactionService {
 
 
 
-        account.setBalance(
-                account.getBalance() - amount
+        senderAccount.setBalance(
+                senderAccount.getBalance()
+                        .subtract(amount)
         );
 
 
-        accountRepository.save(account);
+        receiverAccount.setBalance(
+                receiverAccount.getBalance()
+                        .add(amount)
+        );
+
+
+        createTransaction(
+                senderAccount,
+                TransactionType.TRANSFER_OUT,
+                amount
+        );
+
+
+        createTransaction(
+                receiverAccount,
+                TransactionType.TRANSFER_IN,
+                amount
+        );
+
+
+        accountRepository.save(senderAccount);
+
+        accountRepository.save(receiverAccount);
+
+
+        return mapToResponse(
+                senderAccount.getTransactions()
+                        .get(senderAccount.getTransactions().size() - 1)
+        );
+
+    }
 
 
 
-        Transaction transaction = new Transaction();
+
+
+    private Account getAccount(User user) {
+
+        return accountRepository.findByUser(user)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Account not found"
+                        )
+                );
+
+    }
+
+
+
+
+
+    private void validateAmount(BigDecimal amount) {
+
+
+        if(amount == null ||
+                amount.compareTo(BigDecimal.ZERO) <= 0) {
+
+            throw new BadRequestException(
+                    "Amount must be greater than zero"
+            );
+
+        }
+
+    }
+
+
+
+
+
+    private Transaction createTransaction(
+            Account account,
+            TransactionType type,
+            BigDecimal amount
+    ) {
+
+
+        Transaction transaction =
+                new Transaction();
 
 
         transaction.setAccount(account);
 
-        transaction.setType("WITHDRAWAL");
+        transaction.setType(type);
 
         transaction.setAmount(amount);
 
-        transaction.setDate(LocalDateTime.now());
-
+        transaction.setDate(
+                LocalDateTime.now()
+        );
 
 
         account.getTransactions()
                 .add(transaction);
 
 
+        accountRepository.save(account);
 
-        Transaction saved =
-                transactionRepository.save(transaction);
 
+        return transactionRepository.save(transaction);
+
+    }
+
+
+
+
+
+    private TransactionResponse mapToResponse(
+            Transaction transaction
+    ) {
 
 
         return new TransactionResponse(
-                saved.getId(),
-                saved.getType(),
-                saved.getAmount(),
-                saved.getDate()
+                transaction.getId(),
+                transaction.getType(),
+                transaction.getAmount(),
+                transaction.getDate()
         );
 
     }

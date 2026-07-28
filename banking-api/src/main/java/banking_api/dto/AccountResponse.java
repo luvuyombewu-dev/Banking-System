@@ -1,6 +1,10 @@
 package banking_api.dto;
 
+
 import lombok.*;
+
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -8,8 +12,16 @@ import lombok.*;
 @AllArgsConstructor
 public class AccountResponse {
 
+
     private Long id;
+
+
     private String accountNumber;
+
+
     private String accountHolder;
-    private Double balance;
+
+
+    private BigDecimal balance;
+
 }

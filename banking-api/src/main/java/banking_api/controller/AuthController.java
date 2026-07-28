@@ -1,11 +1,10 @@
 package banking_api.controller;
 
 
-import banking_api.dto.AuthResponse;
 import banking_api.dto.LoginRequest;
 import banking_api.dto.RegisterRequest;
-import banking_api.dto.UserResponse;
-import banking_api.service.UserService;
+import banking_api.dto.AuthResponse;
+import banking_api.service.AuthService;
 
 import jakarta.validation.Valid;
 
@@ -13,43 +12,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
 
-
-    private final UserService userService;
-
+    private final AuthService authService;
 
 
     public AuthController(
-            UserService userService
+            AuthService authService
     ) {
 
-        this.userService = userService;
+        this.authService = authService;
+
     }
-
-
 
 
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(
+    public ResponseEntity<AuthResponse> register(
             @Valid @RequestBody RegisterRequest request
     ) {
 
+        return ResponseEntity.ok(
+                authService.register(request)
+        );
 
-        UserResponse response =
-                userService.register(request);
-
-
-        return ResponseEntity.ok(response);
     }
-
-
-
 
 
 
@@ -58,13 +48,10 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request
     ) {
 
+        return ResponseEntity.ok(
+                authService.login(request)
+        );
 
-        AuthResponse response =
-                userService.login(request);
-
-
-
-        return ResponseEntity.ok(response);
     }
 
 }

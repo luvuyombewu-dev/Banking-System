@@ -1,23 +1,15 @@
 package banking_api.service.impl;
 
 
-import banking_api.dto.AuthResponse;
-import banking_api.dto.LoginRequest;
-import banking_api.dto.RegisterRequest;
 import banking_api.dto.UserResponse;
-
-import banking_api.exception.BadRequestException;
+import banking_api.exception.ResourceNotFoundException;
 import banking_api.model.User;
-
 import banking_api.repository.UserRepository;
-
-import banking_api.security.JwtService;
-
 import banking_api.service.UserService;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 
 
 @Service
@@ -26,138 +18,72 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
-    private final JwtService jwtService;
-
 
 
     public UserServiceImpl(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
-            JwtService jwtService
+            UserRepository userRepository
     ) {
 
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
 
     }
 
 
 
-
-
     @Override
-    public UserResponse register(
-            RegisterRequest request
-    ) {
-
-
-        if(userRepository.findByEmail(request.getEmail()).isPresent()) {
-
-            throw new BadRequestException(
-                    "Email already exists"
-            );
-
-        }
-
-
-
-        User user = new User();
-
-
-        user.setFirstName(
-                request.getFirstName()
-        );
-
-
-        user.setLastName(
-                request.getLastName()
-        );
-
-
-        user.setEmail(
-                request.getEmail()
-        );
-
-
-        user.setPassword(
-                passwordEncoder.encode(
-                        request.getPassword()
-                )
-        );
-
-
-        user.setRole(
-                "ROLE_USER"
-        );
-
-
-
-        User savedUser =
-                userRepository.save(user);
-
-
-
-        return new UserResponse(
-                savedUser.getId(),
-                savedUser.getFirstName(),
-                savedUser.getLastName(),
-                savedUser.getEmail(),
-                null
-        );
-
-    }
-
-
-
-
-
-
-
-
-    @Override
-    public AuthResponse login(
-            LoginRequest request
-    ) {
+    public UserResponse getUserById(Long id) {
 
 
         User user =
-                userRepository.findByEmail(
-                                request.getEmail()
-                        )
+                userRepository.findById(id)
                         .orElseThrow(
-                                () -> new BadRequestException(
-                                        "Invalid email or password"
+                                () -> new ResourceNotFoundException(
+                                        "User not found"
                                 )
                         );
 
 
 
-        if(!passwordEncoder.matches(
-                request.getPassword(),
-                user.getPassword()
-        )) {
+        return mapToResponse(user);
+
+    }
 
 
-            throw new BadRequestException(
-                    "Invalid email or password"
-            );
+
+
+    private UserResponse mapToResponse(
+            User user
+    ) {
+
+
+        BigDecimal balance = null;
+
+
+
+        if(user.getAccount() != null) {
+
+            balance =
+                    user.getAccount()
+                            .getBalance();
 
         }
 
 
 
-        String token =
-                jwtService.generateToken(
-                        user.getEmail()
-                );
+        return new UserResponse(
 
+                user.getId(),
 
+                user.getFirstName(),
 
-        return new AuthResponse(
-                token
+                user.getLastName(),
+
+                user.getEmail(),
+
+                user.getRole(),
+
+                balance
+
         );
 
     }

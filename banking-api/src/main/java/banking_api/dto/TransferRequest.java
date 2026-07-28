@@ -1,23 +1,27 @@
 package banking_api.dto;
 
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class TransferRequest {
+
 
     @NotBlank(message = "Receiver account number is required")
     private String receiverAccountNumber;
 
+
     @NotNull(message = "Amount is required")
     @Positive(message = "Amount must be greater than zero")
-    private Double amount;
+    private BigDecimal amount;
+
 }
