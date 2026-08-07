@@ -1,0 +1,26 @@
+.error-button {
+
+    display:inline-block;
+
+    margin-top:20px;
+
+    padding:12px 25px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+
+.error-button:hover {
+
+    background:#1d4ed8;
+
+}

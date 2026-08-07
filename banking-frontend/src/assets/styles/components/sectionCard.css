@@ -1,0 +1,42 @@
+.section-card {
+
+
+    background:white;
+
+
+    border-radius:20px;
+
+
+    padding:28px;
+
+
+    box-shadow:
+
+    0 10px 25px rgba(0,0,0,0.06);
+
+
+}
+
+
+
+.section-card-header {
+
+
+    margin-bottom:24px;
+
+
+}
+
+
+
+.section-card-header h3 {
+
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:#111827;
+
+
+}

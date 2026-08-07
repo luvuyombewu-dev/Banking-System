@@ -1,0 +1,13 @@
+.main-content {
+
+    flex:1;
+
+    padding:30px;
+
+    background:#f8fafc;
+
+    min-height:calc(100vh - 80px);
+
+    overflow-y:auto;
+
+}

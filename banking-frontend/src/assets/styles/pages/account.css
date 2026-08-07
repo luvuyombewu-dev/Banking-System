@@ -1,0 +1,20 @@
+.account-page {
+    width: 100%;
+}
+
+.account-page h1 {
+    margin-bottom: 25px;
+    color: var(--text-primary);
+}
+
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+@media(max-width:900px) {
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+}

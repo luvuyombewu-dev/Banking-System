@@ -1,0 +1,280 @@
+/* =========================
+   FLEX
+========================= */
+
+
+.flex {
+
+    display: flex;
+
+}
+
+
+
+.flex-center {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+
+
+.flex-between {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+
+
+.flex-column {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+
+/* =========================
+   SPACING
+========================= */
+
+
+.mt-1 {
+
+    margin-top: 8px;
+
+}
+
+
+
+.mt-2 {
+
+    margin-top: 16px;
+
+}
+
+
+
+.mt-3 {
+
+    margin-top: 24px;
+
+}
+
+
+
+.mb-1 {
+
+    margin-bottom: 8px;
+
+}
+
+
+
+.mb-2 {
+
+    margin-bottom: 16px;
+
+}
+
+
+
+.mb-3 {
+
+    margin-bottom: 24px;
+
+}
+
+
+
+.p-1 {
+
+    padding: 8px;
+
+}
+
+
+
+.p-2 {
+
+    padding: 16px;
+
+}
+
+
+
+.p-3 {
+
+    padding: 24px;
+
+}
+
+
+
+/* =========================
+   SIZE
+========================= */
+
+
+.w-full {
+
+    width: 100%;
+
+}
+
+
+
+.h-full {
+
+    height: 100%;
+
+}
+
+
+
+/* =========================
+   TEXT
+========================= */
+
+
+.text-center {
+
+    text-align: center;
+
+}
+
+
+
+.text-right {
+
+    text-align: right;
+
+}
+
+
+
+.font-bold {
+
+    font-weight: 700;
+
+}
+
+
+
+/* =========================
+   BORDER
+========================= */
+
+
+.rounded {
+
+    border-radius: var(--border-radius-md);
+
+}
+
+
+
+.rounded-lg {
+
+    border-radius: var(--border-radius-lg);
+
+}
+
+
+
+/* =========================
+   SHADOW
+========================= */
+
+
+.shadow {
+
+    box-shadow: var(--shadow-card);
+
+}
+
+
+
+.shadow-hover:hover {
+
+    box-shadow: var(--shadow-hover);
+
+}
+
+
+
+/* =========================
+   DISPLAY
+========================= */
+
+
+.hidden {
+
+    display: none;
+
+}
+
+
+
+.visible {
+
+    display: block;
+
+}
+
+
+
+/* =========================
+   CURSOR
+========================= */
+
+
+.cursor-pointer {
+
+    cursor: pointer;
+
+}
+
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+
+@media(max-width:900px) {
+
+
+    .hide-mobile {
+
+        display:none;
+
+    }
+
+
+}
+
+
+
+@media(min-width:901px) {
+
+
+    .show-mobile {
+
+        display:none;
+
+    }
+
+
+}

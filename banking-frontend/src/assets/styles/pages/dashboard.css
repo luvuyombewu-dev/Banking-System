@@ -1,0 +1,23 @@
+.dashboard-page {
+
+    width:100%;
+
+}
+
+
+
+.dashboard-page h1 {
+
+    font-size:32px;
+
+    margin-bottom:30px;
+
+}
+
+
+
+.dashboard-page > * {
+
+    margin-bottom:32px;
+
+}

@@ -1,0 +1,76 @@
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: var(--table-header-background);
+}
+
+th {
+    text-align: left;
+    padding: 16px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+tbody tr {
+    transition: background var(--transition-fast);
+}
+
+tbody tr:hover {
+    background: var(--table-hover-background);
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-white);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.deposit {
+    background: var(--success-color);
+}
+
+.withdraw {
+    background: var(--danger-color);
+}
+
+.transfer_in {
+    background: var(--primary-color);
+}
+
+.transfer_out {
+    background: var(--warning-color);
+}
+
+.empty-transactions {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    th,
+    td {
+        padding: 12px;
+        font-size: 14px;
+    }
+}

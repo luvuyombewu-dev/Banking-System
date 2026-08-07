@@ -1,0 +1,245 @@
+.settings-page {
+
+
+    width:100%;
+
+
+}
+
+
+
+
+
+
+.page-header {
+
+
+    margin-bottom:30px;
+
+
+}
+
+
+
+
+
+.page-header h1 {
+
+
+    color:#1d3557;
+
+    font-size:32px;
+
+    margin-bottom:8px;
+
+
+}
+
+
+
+
+
+.page-header p {
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+
+
+.settings-option {
+
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px;
+
+
+}
+
+
+
+
+
+
+
+.settings-option h3 {
+
+
+    color:#1d3557;
+
+    margin-bottom:8px;
+
+
+}
+
+
+
+
+
+
+
+.settings-option p {
+
+
+    color:#64748b;
+
+
+}
+
+
+
+
+
+
+
+
+.switch {
+
+
+    position:relative;
+
+    display:inline-block;
+
+    width:60px;
+
+    height:32px;
+
+
+}
+
+
+
+
+
+.switch input {
+
+
+    opacity:0;
+
+    width:0;
+
+    height:0;
+
+
+}
+
+
+
+
+
+
+
+.slider {
+
+
+    position:absolute;
+
+    cursor:pointer;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    bottom:0;
+
+    background:#cbd5e1;
+
+    border-radius:30px;
+
+    transition:.3s;
+
+
+}
+
+
+
+
+
+
+
+.slider:before {
+
+
+    content:"";
+
+    position:absolute;
+
+    height:24px;
+
+    width:24px;
+
+    left:4px;
+
+    bottom:4px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:.3s;
+
+
+}
+
+
+
+
+
+
+
+input:checked + .slider {
+
+
+    background:#2563eb;
+
+
+}
+
+
+
+
+
+input:checked + .slider:before {
+
+
+    transform:translateX(28px);
+
+
+}
+
+
+
+
+
+
+
+@media(max-width:700px){
+
+
+    .settings-option {
+
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:20px;
+
+
+    }
+
+
+}

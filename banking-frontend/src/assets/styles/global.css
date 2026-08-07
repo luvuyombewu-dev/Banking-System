@@ -1,0 +1,205 @@
+* {
+
+    box-sizing: border-box;
+
+}
+
+
+
+html {
+
+    scroll-behavior: smooth;
+
+}
+
+
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+
+    background:
+        var(--background-color);
+
+
+    color:
+        var(--text-primary);
+
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+
+}
+
+
+
+/* DARK THEME */
+
+body.dark-theme {
+
+
+    background:
+        var(--dark-background);
+
+
+    color:
+        var(--dark-text-primary);
+
+}
+
+
+
+/* DARK THEME CARDS */
+
+body.dark-theme .section-card,
+
+body.dark-theme .card,
+
+body.dark-theme .chart-card,
+
+body.dark-theme .summary-card {
+
+
+    background:
+        var(--dark-card-background);
+
+
+}
+
+
+
+/* DARK THEME HEADINGS */
+
+body.dark-theme h1,
+
+body.dark-theme h2,
+
+body.dark-theme h3,
+
+body.dark-theme h4 {
+
+
+    color:
+        var(--dark-text-primary);
+
+
+}
+
+
+
+/* DARK THEME TEXT */
+
+body.dark-theme p,
+
+body.dark-theme span,
+
+body.dark-theme label {
+
+
+    color:
+        var(--dark-text-secondary);
+
+
+}
+
+
+
+/* DARK THEME INPUTS */
+
+body.dark-theme input,
+
+body.dark-theme textarea,
+
+body.dark-theme select {
+
+
+    background:
+        var(--dark-input-background);
+
+
+    color:
+        var(--dark-text-primary);
+
+
+    border-color:
+        var(--dark-border-color);
+
+
+}
+
+
+
+/* LINKS */
+
+a {
+
+    text-decoration:none;
+
+    color:inherit;
+
+}
+
+
+
+/* BUTTON RESET */
+
+button {
+
+    font-family:inherit;
+
+    cursor:pointer;
+
+}
+
+
+
+/* IMAGES */
+
+img {
+
+    max-width:100%;
+
+    display:block;
+
+}
+
+
+
+/* REMOVE DEFAULT MARGINS */
+
+h1,
+
+h2,
+
+h3,
+
+h4,
+
+p {
+
+
+    margin-top:0;
+
+
+}
+
+
+
+/* PAGE CONTAINER CONSISTENCY */
+
+#root {
+
+    min-height:100vh;
+
+}

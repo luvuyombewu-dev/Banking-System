@@ -1,0 +1,123 @@
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 270px;
+    height: 100vh;
+    background: linear-gradient(180deg, #2563eb, #1e40af);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    box-shadow: 8px 0 25px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+}
+
+.sidebar-profile {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.sidebar-avatar {
+    font-size: 78px;
+    display: block;
+    margin: 0 auto 12px;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.sidebar-welcome {
+    margin-top: 0;
+    margin-bottom: 6px;
+    opacity: 0.85;
+    font-size: 16px;
+}
+
+.sidebar-profile h3 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 18px;
+    color: white;
+    text-decoration: none;
+    border-radius: 14px;
+    transition: 0.3s ease;
+    font-size: 16px;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateX(5px);
+}
+
+.sidebar-link.active {
+    background: white;
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.sidebar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+}
+
+.logout-button {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: white;
+    color: #2563eb;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: 0.3s ease;
+}
+
+.logout-button svg {
+    color: #2563eb;
+}
+
+.logout-button:hover {
+    background: rgba(255, 255, 255, 0.85);
+    color: #1e40af;
+    transform: translateY(-3px);
+}
+
+.logout-button:hover svg {
+    color: #1e40af;
+}
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .sidebar-avatar {
+        font-size: 68px;
+    }
+}

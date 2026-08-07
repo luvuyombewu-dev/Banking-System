@@ -1,0 +1,118 @@
+.transaction-table {
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    border-collapse: collapse;
+
+    background: var(--card-background);
+
+    border-radius: var(--border-radius-lg);
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow-card);
+
+}
+
+
+
+.transaction-table th,
+
+.transaction-table td {
+
+    padding: 12px 15px;
+
+    text-align: left;
+
+    border-bottom: 1px solid var(--border-color);
+
+}
+
+
+
+.transaction-table th {
+
+    background: var(--table-header-background);
+
+    color: var(--text-primary);
+
+    font-weight: 600;
+
+}
+
+
+
+.transaction-table td {
+
+    color: var(--text-secondary);
+
+}
+
+
+
+.transaction-table tbody tr {
+
+    transition: background 0.2s ease;
+
+}
+
+
+
+.transaction-table tbody tr:hover {
+
+    background: var(--table-hover-background);
+
+}
+
+
+
+.transaction-table .amount {
+
+    font-weight: 600;
+
+}
+
+
+
+.transaction-table .deposit {
+
+    color: var(--success-color);
+
+}
+
+
+
+.transaction-table .withdraw,
+
+.transaction-table .debit {
+
+    color: var(--danger-color);
+
+}
+
+
+
+@media (max-width: 700px) {
+
+    .transaction-table {
+
+        display: block;
+
+        overflow-x: auto;
+
+        white-space: nowrap;
+
+    }
+
+
+    .transaction-table th,
+
+    .transaction-table td {
+
+        padding: 10px;
+
+    }
+
+}
