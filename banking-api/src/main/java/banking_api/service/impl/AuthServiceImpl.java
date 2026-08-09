@@ -11,6 +11,7 @@ import banking_api.repository.UserRepository;
 import banking_api.security.JwtService;
 import banking_api.service.AuthService;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -151,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
                                 request.getEmail().toLowerCase()
                         )
                         .orElseThrow(
-                                () -> new RuntimeException(
+                                () -> new BadCredentialsException(
                                         "Invalid credentials"
                                 )
                         );
@@ -163,7 +164,7 @@ public class AuthServiceImpl implements AuthService {
                 user.getPassword()
         )) {
 
-            throw new RuntimeException(
+            throw new BadCredentialsException(
                     "Invalid credentials"
             );
 

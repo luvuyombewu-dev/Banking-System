@@ -30,8 +30,8 @@ public class GlobalExceptionHandler {
                                 LocalDateTime.now()
                         )
                 );
-    }
 
+    }
 
 
 
@@ -50,8 +50,8 @@ public class GlobalExceptionHandler {
                                 LocalDateTime.now()
                         )
                 );
-    }
 
+    }
 
 
 
@@ -90,11 +90,11 @@ public class GlobalExceptionHandler {
 
 
 
-
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleAuthentication(
             BadCredentialsException ex
     ) {
+
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -111,11 +111,13 @@ public class GlobalExceptionHandler {
 
 
 
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneral(
             Exception ex
     ) {
+
+
+        ex.printStackTrace();
 
 
         return ResponseEntity
