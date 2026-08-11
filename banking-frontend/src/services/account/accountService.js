@@ -1,51 +1,109 @@
 import axiosClient from "../../api/axiosClient";
 import API_ENDPOINTS from "../../api/apiEndpoints";
+import apiErrorHandler from "../../api/apiErrorHandler";
+
 
 const accountService = {
 
+
     getMyAccount: async () => {
 
-        const response = await axiosClient.get(
-            API_ENDPOINTS.ACCOUNT.MY_ACCOUNT
-        );
+        try {
 
-        return response.data;
+            const response = await axiosClient.get(
+                API_ENDPOINTS.ACCOUNT.MY_ACCOUNT
+            );
+
+            return response.data;
+
+        } catch (error) {
+
+            throw apiErrorHandler(error);
+
+        }
 
     },
+
+
+    createAccount: async () => {
+
+        try {
+
+            const response = await axiosClient.post(
+                API_ENDPOINTS.ACCOUNT.CREATE
+            );
+
+            return response.data;
+
+        } catch (error) {
+
+            throw apiErrorHandler(error);
+
+        }
+
+    },
+
 
     deposit: async (data) => {
 
-        const response = await axiosClient.post(
-            API_ENDPOINTS.ACCOUNT.DEPOSIT,
-            data
-        );
+        try {
 
-        return response.data;
+            const response = await axiosClient.post(
+                API_ENDPOINTS.ACCOUNT.DEPOSIT,
+                data
+            );
+
+            return response.data;
+
+        } catch (error) {
+
+            throw apiErrorHandler(error);
+
+        }
 
     },
+
 
     withdraw: async (data) => {
 
-        const response = await axiosClient.post(
-            API_ENDPOINTS.ACCOUNT.WITHDRAW,
-            data
-        );
+        try {
 
-        return response.data;
+            const response = await axiosClient.post(
+                API_ENDPOINTS.ACCOUNT.WITHDRAW,
+                data
+            );
+
+            return response.data;
+
+        } catch (error) {
+
+            throw apiErrorHandler(error);
+
+        }
 
     },
 
+
     transfer: async (data) => {
 
-        const response = await axiosClient.post(
-            API_ENDPOINTS.ACCOUNT.TRANSFER,
-            data
-        );
+        try {
 
-        return response.data;
+            const response = await axiosClient.post(
+                API_ENDPOINTS.ACCOUNT.TRANSFER,
+                data
+            );
+
+            return response.data;
+
+        } catch (error) {
+
+            throw apiErrorHandler(error);
+
+        }
 
     }
 
 };
+
 
 export default accountService;

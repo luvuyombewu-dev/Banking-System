@@ -11,11 +11,13 @@ const Card = ({
             {
                 title && (
 
-                    <h2 className="card-title">
+                    <div className="card-header">
 
-                        {title}
+                        <h2 className="card-title">
+                            {title}
+                        </h2>
 
-                    </h2>
+                    </div>
 
                 )
             }
@@ -27,12 +29,10 @@ const Card = ({
 
             </div>
 
-
         </div>
 
     );
 
 };
-
 
 export default Card;

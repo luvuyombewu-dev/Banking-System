@@ -10,12 +10,13 @@ const TransactionTable = ({
     if (!transactions.length) {
 
         return (
-            <p>
+            <div className="empty-transactions">
                 No transactions available.
-            </p>
+            </div>
         );
 
     }
+
 
     return (
 
@@ -37,6 +38,7 @@ const TransactionTable = ({
 
                 </thead>
 
+
                 <tbody>
 
                     {transactions.map((transaction) => (
@@ -44,15 +46,34 @@ const TransactionTable = ({
                         <tr key={transaction.id}>
 
                             <td>
-                                {transaction.type.replace("_", " ")}
+
+                                <span
+                                    className={`type-badge ${transaction.type
+                                        ?.toLowerCase()
+                                        .replace("_", "-")}`}
+                                >
+                                    {transaction.type
+                                        ?.replace("_", " ")}
+                                </span>
+
                             </td>
 
-                            <td>
-                                {formatCurrency(transaction.amount)}
+
+                            <td className="transaction-amount">
+
+                                {formatCurrency(
+                                    transaction.amount
+                                )}
+
                             </td>
 
-                            <td>
-                                {formatDate(transaction.date)}
+
+                            <td className="transaction-date">
+
+                                {formatDate(
+                                    transaction.date
+                                )}
+
                             </td>
 
                         </tr>

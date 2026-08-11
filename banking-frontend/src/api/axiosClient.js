@@ -20,15 +20,14 @@ const axiosClient = axios.create({
 });
 
 
-
 axiosClient.interceptors.request.use(
 
     (config) => {
 
-
-        const token = storage.get(
-            STORAGE_KEYS.TOKEN
-        );
+        const token =
+            storage.get(
+                STORAGE_KEYS.TOKEN
+            );
 
 
         if (token) {
@@ -53,27 +52,33 @@ axiosClient.interceptors.request.use(
 );
 
 
-
 axiosClient.interceptors.response.use(
 
-    (response) => response,
+    (response) => {
+
+        return response;
+
+    },
 
 
     (error) => {
-
 
         if (
             error.response &&
             error.response.status === 401
         ) {
 
+            storage.remove(
+                STORAGE_KEYS.TOKEN
+            );
 
-            storage.removeToken();
+            storage.remove(
+                STORAGE_KEYS.USER
+            );
 
-            storage.removeUser();
 
-
-            window.location.href = "/login";
+            window.location.href =
+                "/login";
 
         }
 

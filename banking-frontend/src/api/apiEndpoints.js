@@ -3,23 +3,45 @@ const API_ENDPOINTS = {
     AUTH: {
 
         LOGIN: "/auth/login",
-        REGISTER: "/auth/register"
+
+        REGISTER: "/auth/register",
+
+        FORGOT_PASSWORD: "/auth/forgot-password",
+
+        RESET_PASSWORD: "/auth/reset-password",
+
+        CHANGE_PASSWORD: "/auth/change-password"
 
     },
+
 
     ACCOUNT: {
 
         CREATE: "/accounts/create",
+
         MY_ACCOUNT: "/accounts/my-account",
+
         DEPOSIT: "/accounts/deposit",
+
         WITHDRAW: "/accounts/withdraw",
+
         TRANSFER: "/accounts/transfer"
 
     },
 
-    TRANSACTION: {
 
-        ALL: "/transactions"
+    TRANSACTIONS: {
+
+        ALL: "/transactions",
+
+        RECENT: "/transactions/recent"
+
+    },
+
+
+    PROFILE: {
+
+        ME: "/profile"
 
     }
 

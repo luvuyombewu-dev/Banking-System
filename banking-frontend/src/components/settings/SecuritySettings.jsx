@@ -1,15 +1,113 @@
+import { useState } from "react";
+import { toast } from "react-toastify";
+
 import Card from "../ui/Card";
 
+import authService from "../../services/auth/authService";
 
 const SecuritySettings = () => {
 
+    const [showChangePassword, setShowChangePassword] =
+        useState(false);
 
-    const handleAction = (action) => {
+    const [currentPassword, setCurrentPassword] =
+        useState("");
 
-        console.log(`${action} selected`);
+    const [newPassword, setNewPassword] =
+        useState("");
+
+    const [confirmPassword, setConfirmPassword] =
+        useState("");
+
+    const [loading, setLoading] =
+        useState(false);
+
+
+    const handleChangePassword = async (event) => {
+
+        event.preventDefault();
+
+
+        if (newPassword !== confirmPassword) {
+
+            toast.error(
+                "New passwords do not match."
+            );
+
+            return;
+
+        }
+
+
+        if (newPassword.length < 8) {
+
+            toast.error(
+                "New password must be at least 8 characters."
+            );
+
+            return;
+
+        }
+
+
+        if (currentPassword === newPassword) {
+
+            toast.error(
+                "New password must be different from your current password."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            setLoading(true);
+
+
+            await authService.changePassword({
+
+                currentPassword,
+
+                newPassword,
+
+                confirmPassword
+
+            });
+
+
+            toast.success(
+                "Password changed successfully."
+            );
+
+
+            setCurrentPassword("");
+
+            setNewPassword("");
+
+            setConfirmPassword("");
+
+            setShowChangePassword(false);
+
+
+        } catch (error) {
+
+            toast.error(
+                error?.message ||
+                "Unable to change password."
+            );
+
+
+            console.error(error);
+
+        } finally {
+
+            setLoading(false);
+
+        }
 
     };
-
 
 
     return (
@@ -18,7 +116,6 @@ const SecuritySettings = () => {
 
 
             <div className="settings-option">
-
 
                 <div>
 
@@ -33,99 +130,124 @@ const SecuritySettings = () => {
                 </div>
 
 
-
                 <button
-
                     className="btn btn-primary"
-
                     onClick={() =>
-                        handleAction("Change Password")
+                        setShowChangePassword(
+                            !showChangePassword
+                        )
                     }
-
+                    disabled={loading}
                 >
 
-                    Change Password
+                    {
+                        showChangePassword
+                            ? "Cancel"
+                            : "Change Password"
+                    }
 
                 </button>
-
 
             </div>
 
 
+            {
+                showChangePassword && (
+
+                    <form
+                        className="change-password-form"
+                        onSubmit={handleChangePassword}
+                    >
+
+                        <div className="form-group">
+
+                            <label htmlFor="currentPassword">
+                                Current Password
+                            </label>
+
+                            <input
+                                id="currentPassword"
+                                type="password"
+                                value={currentPassword}
+                                onChange={(event) =>
+                                    setCurrentPassword(
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="Enter current password"
+                                required
+                                disabled={loading}
+                            />
+
+                        </div>
 
 
+                        <div className="form-group">
 
-            <div className="settings-option">
+                            <label htmlFor="newPassword">
+                                New Password
+                            </label>
 
+                            <input
+                                id="newPassword"
+                                type="password"
+                                value={newPassword}
+                                onChange={(event) =>
+                                    setNewPassword(
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="Enter new password"
+                                required
+                                minLength={8}
+                                disabled={loading}
+                            />
 
-                <div>
-
-                    <h3>
-                        Two-Factor Authentication
-                    </h3>
-
-                    <p>
-                        Protect your account with an additional security layer.
-                    </p>
-
-                </div>
-
-
-
-                <button
-
-                    className="btn btn-secondary"
-
-                    onClick={() =>
-                        handleAction("Configure 2FA")
-                    }
-
-                >
-
-                    Configure
-
-                </button>
+                        </div>
 
 
-            </div>
+                        <div className="form-group">
+
+                            <label htmlFor="confirmPassword">
+                                Confirm New Password
+                            </label>
+
+                            <input
+                                id="confirmPassword"
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(event) =>
+                                    setConfirmPassword(
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="Confirm new password"
+                                required
+                                minLength={8}
+                                disabled={loading}
+                            />
+
+                        </div>
 
 
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={loading}
+                        >
 
+                            {
+                                loading
+                                    ? "Changing Password..."
+                                    : "Update Password"
+                            }
 
+                        </button>
 
-            <div className="settings-option">
+                    </form>
 
-
-                <div>
-
-                    <h3>
-                        Active Sessions
-                    </h3>
-
-                    <p>
-                        Review and manage devices signed in to your account.
-                    </p>
-
-                </div>
-
-
-
-                <button
-
-                    className="btn btn-secondary"
-
-                    onClick={() =>
-                        handleAction("View Sessions")
-                    }
-
-                >
-
-                    View Sessions
-
-                </button>
-
-
-            </div>
+                )
+            }
 
 
         </Card>
@@ -133,6 +255,5 @@ const SecuritySettings = () => {
     );
 
 };
-
 
 export default SecuritySettings;

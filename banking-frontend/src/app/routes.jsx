@@ -13,6 +13,8 @@ import DashboardLayout from "../layouts/DashboardLayout";
 
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import ResetPassword from "../pages/auth/ResetPassword";
 
 
 import Dashboard from "../pages/dashboard/Dashboard";
@@ -20,6 +22,7 @@ import Account from "../pages/account/Account";
 import Transactions from "../pages/transactions/Transactions";
 import RecentTransactions from "../pages/transactions/RecentTransactions";
 import Transfer from "../pages/transfer/Transfer";
+
 
 import Profile from "../pages/profile/Profile";
 import Settings from "../pages/settings/Settings";
@@ -35,7 +38,6 @@ import ProtectedRoute from "../routes/ProtectedRoute";
 
 const AppRoutes = () => {
 
-
     return (
 
         <Routes>
@@ -45,8 +47,6 @@ const AppRoutes = () => {
                 path="/"
                 element={<Splash />}
             />
-
-
 
 
 
@@ -67,8 +67,19 @@ const AppRoutes = () => {
                 />
 
 
-            </Route>
+                <Route
+                    path="/forgot-password"
+                    element={<ForgotPassword />}
+                />
 
+
+                <Route
+                    path="/reset-password"
+                    element={<ResetPassword />}
+                />
+
+
+            </Route>
 
 
 
@@ -88,12 +99,10 @@ const AppRoutes = () => {
                     />
 
 
-
                     <Route
                         path="/account"
                         element={<Account />}
                     />
-
 
 
                     <Route
@@ -102,12 +111,10 @@ const AppRoutes = () => {
                     />
 
 
-
                     <Route
                         path="/recent-transactions"
                         element={<RecentTransactions />}
                     />
-
 
 
                     <Route
@@ -116,12 +123,10 @@ const AppRoutes = () => {
                     />
 
 
-
                     <Route
                         path="/profile"
                         element={<Profile />}
                     />
-
 
 
                     <Route
@@ -139,14 +144,12 @@ const AppRoutes = () => {
 
 
 
-
             {/* Error Routes */}
 
             <Route
                 path="/500"
                 element={<ServerError />}
             />
-
 
 
             <Route

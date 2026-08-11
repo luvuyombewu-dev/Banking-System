@@ -54,9 +54,7 @@ const BalanceChart = ({
         <div className="chart-card">
 
 
-            <h3>
-                Balance Overview
-            </h3>
+
 
 
 

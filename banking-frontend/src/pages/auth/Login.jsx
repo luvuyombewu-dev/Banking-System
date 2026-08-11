@@ -10,7 +10,6 @@ import Button from "../../components/ui/Button";
 
 import "../../assets/styles/pages/login.css";
 
-
 const Login = () => {
 
     const navigate = useNavigate();
@@ -21,7 +20,6 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-
 
 
     const handleSubmit = async (event) => {
@@ -55,7 +53,6 @@ const Login = () => {
 
         } catch (error) {
 
-
             toast.error(
                 error?.message ||
                 "Invalid email or password."
@@ -74,6 +71,14 @@ const Login = () => {
     };
 
 
+    const handleGoogleLogin = () => {
+
+        toast.info(
+            "Google Sign-In will be available soon."
+        );
+
+    };
+
 
     return (
 
@@ -87,62 +92,38 @@ const Login = () => {
 
 
                 <form
-
                     className="login-form"
-
                     onSubmit={handleSubmit}
-
                 >
 
-
                     <Input
-
                         type="email"
-
                         name="email"
-
                         value={email}
-
                         placeholder="Email"
-
                         onChange={(event) =>
                             setEmail(event.target.value)
                         }
-
                         required
-
                     />
-
 
 
                     <Input
-
                         type="password"
-
                         name="password"
-
                         value={password}
-
                         placeholder="Password"
-
                         onChange={(event) =>
                             setPassword(event.target.value)
                         }
-
                         required
-
                     />
 
 
-
                     <Button
-
                         className="login-button"
-
                         type="submit"
-
                         disabled={loading}
-
                     >
 
                         {
@@ -153,20 +134,53 @@ const Login = () => {
 
                     </Button>
 
-
                 </form>
 
+
+                <div className="login-divider">
+
+                    <span>OR</span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    className="google-login-button"
+                    onClick={handleGoogleLogin}
+                    disabled={loading}
+                >
+
+                    <span className="google-icon">
+                        G
+                    </span>
+
+                    <span>
+                        Continue with Google
+                    </span>
+
+                </button>
 
 
                 <p>
 
                     <Link to="/forgot-password">
-
                         Forgot password?
-
                     </Link>
 
                 </p>
+
+
+                <p className="login-register">
+
+                    Don't have an account?{" "}
+
+                    <Link to="/register">
+                        Sign Up
+                    </Link>
+
+                </p>
+
 
 
             </div>
@@ -176,6 +190,5 @@ const Login = () => {
     );
 
 };
-
 
 export default Login;

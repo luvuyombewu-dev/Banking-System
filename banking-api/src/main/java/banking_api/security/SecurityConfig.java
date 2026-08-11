@@ -1,6 +1,5 @@
 package banking_api.config;
 
-
 import banking_api.security.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -10,36 +9,28 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-
 import org.springframework.security.config.http.SessionCreationPolicy;
-
 import org.springframework.security.web.SecurityFilterChain;
-
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
 import java.util.List;
-
 
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http
     ) throws Exception {
-
 
         return http
 
@@ -55,12 +46,16 @@ public class SecurityConfig {
                         )
                 )
 
-
                 .authorizeHttpRequests(auth -> auth
 
-
+                        /*
+                         * Public authentication endpoints.
+                         */
                         .requestMatchers(
-                                "/api/auth/**",
+                                "/api/auth/login",
+                                "/api/auth/register",
+                                "/api/auth/forgot-password",
+                                "/api/auth/reset-password",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
@@ -68,32 +63,38 @@ public class SecurityConfig {
                         .permitAll()
 
 
+                        /*
+                         * Change password requires
+                         * an authenticated JWT user.
+                         */
+                        .requestMatchers(
+                                "/api/auth/change-password"
+                        )
+                        .authenticated()
+
+
+                        /*
+                         * Everything else requires authentication.
+                         */
                         .anyRequest()
                         .authenticated()
 
                 )
-
 
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
 
-
                 .build();
-
     }
-
-
 
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
-
         CorsConfiguration configuration =
                 new CorsConfiguration();
-
 
 
         configuration.setAllowedOrigins(
@@ -101,7 +102,6 @@ public class SecurityConfig {
                         "http://localhost:5173"
                 )
         );
-
 
 
         configuration.setAllowedMethods(
@@ -115,11 +115,9 @@ public class SecurityConfig {
         );
 
 
-
         configuration.setAllowedHeaders(
                 List.of("*")
         );
-
 
 
         configuration.setAllowCredentials(
@@ -127,10 +125,8 @@ public class SecurityConfig {
         );
 
 
-
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
-
 
 
         source.registerCorsConfiguration(
@@ -140,7 +136,6 @@ public class SecurityConfig {
 
 
         return source;
-
     }
 
 }

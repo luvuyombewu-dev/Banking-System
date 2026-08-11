@@ -1,12 +1,11 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 import accountService from "../../services/account/accountService";
 
 import "./transactionForm.css";
 
-
 const TransferForm = ({ onSuccess }) => {
-
 
     const [accountNumber, setAccountNumber] = useState("");
 
@@ -15,16 +14,19 @@ const TransferForm = ({ onSuccess }) => {
     const [loading, setLoading] = useState(false);
 
 
-
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
 
-        if (!accountNumber || !amount || Number(amount) <= 0) {
+        if (
+            !accountNumber ||
+            !amount ||
+            Number(amount) <= 0
+        ) {
+            toast.error("Please enter a valid account number and amount.");
             return;
         }
-
 
 
         try {
@@ -32,21 +34,23 @@ const TransferForm = ({ onSuccess }) => {
             setLoading(true);
 
 
-
             await accountService.transfer({
 
-                accountNumber,
+                receiverAccountNumber: accountNumber,
 
                 amount: Number(amount)
 
             });
 
 
+            toast.success(
+                `Transfer of R ${Number(amount).toFixed(2)} was successful.`
+            );
+
 
             setAccountNumber("");
 
             setAmount("");
-
 
 
             if (onSuccess) {
@@ -56,9 +60,7 @@ const TransferForm = ({ onSuccess }) => {
             }
 
 
-
         } catch (error) {
-
 
             console.error(
                 "Transfer failed:",
@@ -66,28 +68,28 @@ const TransferForm = ({ onSuccess }) => {
             );
 
 
+            toast.error(
+                error?.response?.data?.message ||
+                error?.message ||
+                "Transfer failed. Please try again."
+            );
+
+
         } finally {
 
-
             setLoading(false);
-
 
         }
 
     };
 
 
-
     return (
 
         <form
-
             className="transaction-form"
-
             onSubmit={handleSubmit}
-
         >
-
 
             <label>
                 Account Number
@@ -113,7 +115,6 @@ const TransferForm = ({ onSuccess }) => {
             />
 
 
-
             <label>
                 Amount
             </label>
@@ -129,6 +130,8 @@ const TransferForm = ({ onSuccess }) => {
 
                 min="1"
 
+                step="0.01"
+
                 onChange={(e) =>
                     setAmount(
                         e.target.value
@@ -138,7 +141,6 @@ const TransferForm = ({ onSuccess }) => {
                 required
 
             />
-
 
 
             <button
@@ -165,6 +167,5 @@ const TransferForm = ({ onSuccess }) => {
     );
 
 };
-
 
 export default TransferForm;

@@ -1,82 +1,47 @@
-import SectionCard from "../../components/common/SectionCard";
-
-import ThemeToggle from "../../components/settings/ThemeToggle";
-import NotificationToggle from "../../components/settings/NotificationToggle";
 import SecuritySettings from "../../components/settings/SecuritySettings";
 import AccountPreferences from "../../components/settings/AccountPreferences";
 
 import "../../assets/styles/pages/settings.css";
 
-
 const Settings = () => {
-
 
     return (
 
         <div className="settings-page">
 
+            <div className="settings-header">
 
-            <div className="page-header">
+                <div className="settings-header-content">
 
+                    <div>
 
-                <h1>
-                    Settings
-                </h1>
+                        <h1>
+                            Settings
+                        </h1>
 
+                        <p>
+                            Manage your account preferences and security settings.
+                        </p>
 
-                <p>
-                    Customize your application preferences
-                </p>
+                    </div>
 
+                </div>
 
             </div>
 
 
+            <div className="settings-content">
 
+                <AccountPreferences />
 
-            <SectionCard
+                <SecuritySettings />
 
-                title="Appearance"
-
-            >
-
-                <ThemeToggle />
-
-            </SectionCard>
-
-
-
-
-
-            <SectionCard
-
-                title="Notifications"
-
-            >
-
-                <NotificationToggle />
-
-            </SectionCard>
-
-
-
-
-
-            <AccountPreferences />
-
-
-
-
-
-            <SecuritySettings />
-
-
+            </div>
 
         </div>
 
     );
 
 };
-
 
 export default Settings;

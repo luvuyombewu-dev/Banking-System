@@ -1,40 +1,45 @@
-version: "3.8"
-
 services:
 
   postgres:
     image: postgres:16
     container_name: banking-postgres
     restart: always
+
     environment:
       POSTGRES_DB: banking_system
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin123
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
     ports:
       - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d banking_system"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-
   banking-api:
     build: .
     container_name: banking-api
     restart: always
+
     depends_on:
       postgres:
         condition: service_healthy
+
     ports:
       - "8080:8080"
+
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/banking_system
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: admin123
-
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
 
 volumes:
   postgres_data:
