@@ -21,6 +21,7 @@ The application provides secure user authentication, bank account management, de
 * [Database](#database)
 * [Docker](#docker)
 * [Configuration](#configuration)
+* [Clone / How to Run](#clone--how-to-run)
 * [Running the Project Locally](#running-the-project-locally)
 * [Running with Docker](#running-with-docker)
 * [API Documentation](#api-documentation)
@@ -28,8 +29,13 @@ The application provides secure user authentication, bank account management, de
 * [Testing](#testing)
 * [Git and Version Control](#git-and-version-control)
 * [Development Workflow](#development-workflow)
+* [Project Design Principles](#project-design-principles)
+* [Error Handling](#error-handling)
+* [Security Considerations](#security-considerations)
 * [Future Improvements](#future-improvements)
 * [Project Status](#project-status)
+* [Author](#author)
+* [Repository](#repository)
 * [License](#license)
 
 ---
@@ -717,6 +723,173 @@ For Docker Compose, the environment variables are supplied to the containers.
 
 ---
 
+# Clone / How to Run
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/luvuyombewu-dev/Banking-System.git
+cd Banking-System
+```
+
+## 2. Run the Backend Locally
+
+Make sure PostgreSQL is running and create the `banking_system` database.
+
+From Git Bash:
+
+```bash
+cd banking-api
+
+export DB_URL=jdbc:postgresql://localhost:5432/banking_system
+export DB_USERNAME=postgres
+export DB_PASSWORD=your_database_password
+export JWT_SECRET=your_jwt_secret
+export JWT_EXPIRATION=86400000
+```
+
+Build the backend:
+
+```bash
+./mvnw clean package
+```
+
+Run the backend:
+
+```bash
+./mvnw spring-boot:run
+```
+
+The backend runs at:
+
+```text
+http://localhost:8080
+```
+
+## 3. Run the Frontend
+
+Open a second terminal:
+
+```bash
+cd Banking-System/banking-frontend
+npm install
+npm run dev
+```
+
+The frontend normally runs at:
+
+```text
+http://localhost:5173
+```
+
+Open the application in your browser:
+
+```text
+http://localhost:5173
+```
+
+## 4. Run the Complete Application with Docker
+
+From the backend directory:
+
+```bash
+cd Banking-System/banking-api
+```
+
+Set the required environment variables:
+
+```bash
+export DB_PASSWORD=your_database_password
+export JWT_SECRET=your_jwt_secret
+export JWT_EXPIRATION=86400000
+```
+
+Start PostgreSQL and the Spring Boot API:
+
+```bash
+docker compose up --build
+```
+
+Run in detached mode:
+
+```bash
+docker compose up --build -d
+```
+
+Check the containers:
+
+```bash
+docker compose ps
+```
+
+View backend logs:
+
+```bash
+docker compose logs banking-api
+```
+
+View PostgreSQL logs:
+
+```bash
+docker compose logs postgres
+```
+
+Stop the containers:
+
+```bash
+docker compose down
+```
+
+To remove the containers and PostgreSQL volume:
+
+```bash
+docker compose down -v
+```
+
+The API is available at:
+
+```text
+http://localhost:8080
+```
+
+Swagger UI is available at:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+The React frontend can then be started separately:
+
+```bash
+cd Banking-System/banking-frontend
+npm install
+npm run dev
+```
+
+The frontend normally runs at:
+
+```text
+http://localhost:5173
+```
+
+## Environment Variables
+
+Do not commit real credentials or secrets to GitHub.
+
+Use your own local values for:
+
+```text
+DB_URL
+DB_USERNAME
+DB_PASSWORD
+JWT_SECRET
+JWT_EXPIRATION
+```
+
+The repository excludes local configuration files containing secrets.
+
+---
+
 # Running the Project Locally
 
 ## Prerequisites
@@ -731,100 +904,6 @@ Install the following software:
 * Git
 
 Docker is optional for local development but recommended for reproducing the containerized environment.
-
----
-
-## Clone the Repository
-
-```bash
-git clone https://github.com/luvuyombewu-dev/Banking-System.git
-```
-
-Enter the project directory:
-
-```bash
-cd Banking-System
-```
-
----
-
-# Backend Setup
-
-Navigate to the backend:
-
-```bash
-cd banking-api
-```
-
-Configure the required environment variables.
-
-For Git Bash, for example:
-
-```bash
-export DB_URL=jdbc:postgresql://localhost:5432/banking_system
-export DB_USERNAME=postgres
-export DB_PASSWORD=your_database_password
-export JWT_SECRET=your_jwt_secret
-export JWT_EXPIRATION=86400000
-```
-
-On Windows PowerShell:
-
-```powershell
-$env:DB_URL="jdbc:postgresql://localhost:5432/banking_system"
-$env:DB_USERNAME="postgres"
-$env:DB_PASSWORD="your_database_password"
-$env:JWT_SECRET="your_jwt_secret"
-$env:JWT_EXPIRATION="86400000"
-```
-
-Build the application:
-
-```bash
-mvn clean package
-```
-
-Run the application:
-
-```bash
-mvn spring-boot:run
-```
-
-The API runs on:
-
-```text
-http://localhost:8080
-```
-
----
-
-# Frontend Setup
-
-Open another terminal and navigate to the frontend:
-
-```bash
-cd banking-frontend
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The Vite development server normally runs on:
-
-```text
-http://localhost:5173
-```
-
-The frontend communicates with the backend running on port `8080`.
 
 ---
 
@@ -997,7 +1076,7 @@ Frontend sends JWT with protected requests
 
 Example authorization header:
 
-```http
+```text
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
 ```
 
@@ -1338,7 +1417,7 @@ The repository represents the completed core implementation of the banking appli
 
 # Author
 
-**Luvuyo Mbewu**
+Luvuyo Mbewu
 
 Computer Engineering graduate and software developer focused on backend development, full-stack application development, systems engineering, and secure software architecture.
 
@@ -1358,4 +1437,24 @@ This project is intended primarily for educational, portfolio, and demonstration
 
 If a specific open-source license is required for redistribution or commercial use, a license such as MIT should be added to the repository explicitly.
 
+
+
+# Screen-Shots
+<img width="1312" height="604" alt="Banking_Login" src="https://github.com/user-attachments/assets/bc0c6f72-3014-4748-a17c-da6a6eebc306" />
+
+<img width="1095" height="560" alt="Banking_SignUp_CreateAccount" src="https://github.com/user-attachments/assets/55f54aee-65f6-4bbb-99ef-f6f18491d6ee" />
+
+<img width="1231" height="567" alt="Banking_ForgotPassword" src="https://github.com/user-attachments/assets/cf7e890a-4a92-48e0-adf6-ba205fbce3ce" />
+
+<img width="1179" height="547" alt="Banking_ResetPassword" src="https://github.com/user-attachments/assets/531b3e79-dc9b-43ab-960e-2987634497e6" />
+
+<img width="1336" height="671" alt="Banking_Dashboard" src="https://github.com/user-attachments/assets/7cef37c0-8380-483f-a31f-0bc908ef4f83" />
+
+<img width="1337" height="666" alt="Banking_Profile" src="https://github.com/user-attachments/assets/4d8649cb-c3ac-49be-8fa5-e81962410a21" />
+
+<img width="1343" height="669" alt="Banking_Transactions" src="https://github.com/user-attachments/assets/3867f4fd-1d40-4315-872c-723d314c6e96" />
+
+<img width="1338" height="672" alt="Banking_RecentTransactions" src="https://github.com/user-attachments/assets/e31df915-3b50-4eb4-ab92-bc20b78809b5" />
+
+<img width="1337" height="667" alt="Banking_Settings" src="https://github.com/user-attachments/assets/5def7a5e-d155-4cca-b4c1-88cd04aa4a01" />
 
