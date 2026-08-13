@@ -1439,7 +1439,7 @@ If a specific open-source license is required for redistribution or commercial u
 
 
 
-# Screen-Shots
+# Screenshot
 <img width="1312" height="604" alt="Banking_Login" src="https://github.com/user-attachments/assets/bc0c6f72-3014-4748-a17c-da6a6eebc306" />
 
 <img width="1095" height="560" alt="Banking_SignUp_CreateAccount" src="https://github.com/user-attachments/assets/55f54aee-65f6-4bbb-99ef-f6f18491d6ee" />
